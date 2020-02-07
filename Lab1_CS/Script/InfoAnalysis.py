@@ -35,7 +35,6 @@ class Analysis():
 
     # визначає кількість інформаці
     def calculate_chars(self):
-        import re
         count = 0
         for item in self.read_file():
             if item in '([а-яА-Я])':
@@ -75,14 +74,45 @@ class Analysis():
                 base64_str += alphabet[int(bracket, 2)]
         return base64_str
 
+    def calculate_chars_base64(self):
+        print(self.entropy(self.base_64_Encode()))
+        return len(self.base_64_Encode()) * self.entropy(self.base_64_Encode())
+
+    def calculate_chars_txt(self):
+        print(self.entropy(self.read_file()))
+        return len(self.read_file()) * self.entropy(self.read_file())
+
+
+class Analysis7z(Analysis):
+
+    def read_file7z(self):
+        with open(self.file, 'rb') as my_new_file:
+            return my_new_file.read()
+
+    def base_64_Encode(self):
+        import base64
+        encoded = base64.b64encode(self.read_file7z())
+        return encoded
+
+    def calculate_chars_7z_base64(self):
+        print(self.entropy(self.base_64_Encode()))
+        return len(self.base_64_Encode()) * self.entropy(self.base_64_Encode())
 
 
 file1 = "G:\Projects\Labs_Computer_Systems\Lab1_CS\TextFiles\Whenidie.txt"
 file2 = "G:\Projects\Labs_Computer_Systems\Lab1_CS\TextFiles\Tigrolovi.txt"
 file3 = "G:\Projects\Labs_Computer_Systems\Lab1_CS\TextFiles\Aforyzmy.txt"
 
-analysis = Analysis(file1)
+analysis = Analysis(file3)
 print('Entrophy:', analysis.entropy(analysis.read_file()))
 print('Char frequency:', analysis.char_frequency())
 print('Calculate chars', analysis.calculate_chars())
 print(analysis.base_64_Encode())
+print('Calculate chars on Base64: ', analysis.calculate_chars_base64())
+print('Calculate chars on txt: ', analysis.calculate_chars_txt())
+
+file64_1 = "G:\Projects\Labs_Computer_Systems\Lab1_CS\TextFiles\Whenidie.7z"
+file64_2 = "G:\Projects\Labs_Computer_Systems\Lab1_CS\TextFiles\Tigrolovi.7z"
+file64_3 = "G:\Projects\Labs_Computer_Systems\Lab1_CS\TextFiles\Aforyzmy.7z"
+analysis64 = Analysis7z(file64_3)
+print('Calculate 7z on Base64: ', analysis64.calculate_chars_7z_base64())
